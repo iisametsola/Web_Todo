@@ -1,5 +1,6 @@
 import { pool } from '../helper/db.js'
 import { Router } from 'express'
+import { auth } from '../helper/auth.js'
 
 const router = Router()
 
@@ -12,12 +13,11 @@ res.status(200).json(result.rows)
 })
 })
 
-router.post('/', (req, res, next) => {
+
+router.post('/', auth, (req, res,next) => {
 const { task } = req.body
 if (!task) {
-const error = new Error('Task is required')
-error.status = 400
-return next(error)
+return res.status(400).json({error: 'Task is required'})
 }
 pool.query('insert into task (description) values ($1) returning *',
 [task.description],
@@ -31,8 +31,7 @@ res.status(201).json({id: result.rows[0].id, description: task.description})
 
 
 
-
-router.delete('/:id', (req, res,next) => {
+router.delete('/:id', auth, (req, res,next) => {
  const { id } = req.params
  pool.query('delete from task WHERE id = $1',
  [id],
