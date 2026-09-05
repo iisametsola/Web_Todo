@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import todoRouter from './routes/todoRouter.js'
+import userRouter from './routes/userRouter.js'
 
 
 const port = process.env.PORT || 3001
@@ -15,6 +16,7 @@ res.send('Todo API is running')
 })
 
 app.use('/tasks', todoRouter)
+app.use('/users', userRouter)
 
 app.listen(port, () => {
  console.log(`Server is running on port ${port}`)
